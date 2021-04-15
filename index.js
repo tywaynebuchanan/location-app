@@ -7,12 +7,17 @@ document.getElementById("root").innerHTML = `
             <label for = "search">Search</label>
             <input type="text" id = "search" name = "search">
             <input type = "button" id = "searchBtn" name = "searchBtn" value = "Search">
+            <p id = "results"></p>
         </div>
     </div> 
 `
+let searchBox = document.getElementById('search')
 
-const data = {Addresses: "Miami FL"}
-fetch('https://devapi.alvys.io/api/carriers/QueryCarriersByAddress', {
+searchBox.addEventListener("keyup",(e)=>{
+    let searchquery = e.target.value;
+    document.getElementById("results").innerText = searchquery;
+    let data = {Addresses: [searchquery]}
+    fetch('https://devapi.alvys.io/api/carriers/QueryCarriersByAddress', {
 	"method": "POST",
     body: JSON.stringify(data),
     	"headers": {
@@ -21,7 +26,19 @@ fetch('https://devapi.alvys.io/api/carriers/QueryCarriersByAddress', {
 	},
    
 })
-.then(response => response.json()).then(json => console.log(json)).catch(error => {console.error(error)})
+.then(response => response.json()).then(json => {
+    json.forEach(element => {
+        let div = document.createElement('div');
+        div.innerHTML = element.Name;
+        results.appendChild(div)
+        
+    });
+}).catch(error => {console.error(error)})
+})
+
+
+
+
 
 
 
